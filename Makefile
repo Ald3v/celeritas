@@ -18,4 +18,4 @@ build_cli_w:
 	@go build -o ../myapp/celeritas.exe ./cmd/cli
 
 build_w:
-	@go build -o ./dist/celeritas.exe ./cmd/cli
+	@go build -buildvcs=false -o ./dist/celeritas.exe ./cmd/cli

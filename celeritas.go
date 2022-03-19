@@ -38,16 +38,16 @@ type config struct {
 }
 
 func (c *Celeritas) New(rootPath string) error {
-	pathConfig := initPaths{
+	/*pathConfig := initPaths{
 		rootPath:    rootPath,
 		folderNames: []string{"handlers", "migrations", "views", "data", "public", "tmp", "logs", "middleware"},
 	}
 	err := c.Init(pathConfig)
 	if err != nil {
 		return err
-	}
+	}*/
 
-	err = c.checkDotEnv(rootPath)
+	err := c.checkDotEnv(rootPath)
 	if err != nil {
 		return err
 	}
