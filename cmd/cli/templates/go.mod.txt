@@ -3,7 +3,7 @@ module ${APP_NAME}
 go 1.18
 
 require (
-	github.com/ald3v/celeritas v0.0.0-20220318213000-b6a172d5b16e
+	github.com/ald3v/celeritas v0.0.1
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/upper/db/v4 v4.5.2
 	golang.org/x/crypto v0.0.0-20220313003712-b769efc7c000
