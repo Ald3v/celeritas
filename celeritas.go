@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/ald3v/celeritas/logger"
 	"github.com/ald3v/celeritas/session"
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
@@ -20,8 +21,7 @@ type Celeritas struct {
 	AppName string
 	Debug   bool
 	Version string
-	ErrorLog *log.Logger
-	InfoLog *log.Logger
+	Logger *logger.Logger	
 	RootPath string
 	Routes *chi.Mux
 	Session *scs.SessionManager
@@ -59,7 +59,7 @@ func (c *Celeritas) New(rootPath string) error {
 	}
 
 	// create loggers
-	infoLog, errorLog := c.startLoggers()
+	logger := logger.New(os.Stdout, logger.LevelInfo)
 
 	// connect to database
 	databaseConfig := databaseConfig{
@@ -73,7 +73,7 @@ func (c *Celeritas) New(rootPath string) error {
 	if os.Getenv("DATABASE_TYPE") != "" {
 		db, err := c.OpenDB(databaseConfig)
 		if err != nil {
-			errorLog.Println(err)
+			logger.PrintError(err,nil)
 			os.Exit(1)
 		}
 		c.DB = Database {
@@ -83,8 +83,7 @@ func (c *Celeritas) New(rootPath string) error {
 	}
 
 
-	c.InfoLog = infoLog
-	c.ErrorLog = errorLog
+	c.Logger = logger	
 	c.Debug, _ = strconv.ParseBool(os.Getenv("DEBUG"))
 	c.Version = version
 	c.RootPath = rootPath
@@ -132,7 +131,7 @@ func (c *Celeritas) ListenAndServe() {
 	
 	srv := &http.Server{
 		Addr:fmt.Sprintf(":%s", os.Getenv("PORT")),
-		ErrorLog:c.ErrorLog,
+		ErrorLog: log.New(c.Logger, "", 0),
 		Handler:c.Routes,
 		IdleTimeout: 30 * time.Second,
 		ReadTimeout: 30 * time.Second,
@@ -141,9 +140,12 @@ func (c *Celeritas) ListenAndServe() {
 
 	defer c.DB.Pool.Close()
 
-	c.InfoLog.Printf("Listening on port :%s", os.Getenv("PORT"))
+	c.Logger.PrintInfo("starting server", map[string]string{
+		"addr": srv.Addr,
+		"env": os.Getenv("ENV"),
+	})
 	err := srv.ListenAndServe()
-	c.ErrorLog.Fatal(err)
+	c.Logger.PrintFatal(err, nil)
 }
 
 
@@ -157,16 +159,6 @@ func (c *Celeritas) checkDotEnv(path string) error {
 	return nil
 }
 
-func (c *Celeritas) startLoggers()(*log.Logger, *log.Logger) {
-	
-	var infoLog *log.Logger
-	var errorLog *log.Logger
-
-	infoLog = log.New(os.Stdout,"INFO\t", log.Ldate | log.Ltime)
-	errorLog = log.New(os.Stdout,"ERROR\t", log.Ldate | log.Ltime | log.Lshortfile)
-
-	return infoLog, errorLog
-}
 
 func (c *Celeritas) BuildDSN() string{
 	
