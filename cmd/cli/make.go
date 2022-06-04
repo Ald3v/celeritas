@@ -37,10 +37,10 @@ func doMake(arg2, arg3 string) error {
 		}
 
 	case "auth":
-		/*err := doAuth()
+		err := doAuth()
 		if err != nil {
 			exitGracefully(err)
-		}*/
+		}
 
 	case "handler":
 		/*if arg3 == "" {

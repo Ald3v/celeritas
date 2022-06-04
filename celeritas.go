@@ -62,9 +62,16 @@ func (c *Celeritas) New(rootPath string) error {
 	infoLog, errorLog := c.startLoggers()
 
 	// connect to database
+	databaseConfig := databaseConfig{
+		dbType: os.Getenv("DATABASE_TYPE"),
+		dsn: c.BuildDSN(),
+		maxOpenConns: 25,
+		maxIdleConns: 25,
+		maxIdleTime: "15m",
+	}
 
 	if os.Getenv("DATABASE_TYPE") != "" {
-		db, err := c.OpenDB(os.Getenv("DATABASE_TYPE"),c.BuildDSN())
+		db, err := c.OpenDB(databaseConfig)
 		if err != nil {
 			errorLog.Println(err)
 			os.Exit(1)
@@ -94,10 +101,7 @@ func (c *Celeritas) New(rootPath string) error {
 			domain: os.Getenv("COOKIE_DOMAIN"),
 		},
 		sessionType: os.Getenv("SESION_TYPE"),
-		database: databaseConfig{
-			database: os.Getenv("DATABASE_TYPE"),
-			dsn:c.BuildDSN(),
-		},
+		database: databaseConfig,
 	}
 
 	sess := session.Session{

@@ -16,8 +16,12 @@ type cookieConfig struct {
 }
 
 type databaseConfig struct {
+	dbType string 
 	dsn      string
 	database string
+	maxOpenConns int
+	maxIdleConns int
+	maxIdleTime string
 }
 
 type Database struct {
