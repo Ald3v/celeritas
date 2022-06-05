@@ -39,7 +39,7 @@ type config struct {
 }
 
 type AppConfig struct {
-	limiter limiterConfig
+	Limiter limiterConfig
 }
 
 func (c *Celeritas) New(rootPath string) error {
@@ -116,7 +116,7 @@ func (c *Celeritas) New(rootPath string) error {
 	}
 
 	c.AppConfig = AppConfig{
-		limiter:limiterConfig,
+		Limiter:limiterConfig,
 	}
 
 	sess := session.Session{
