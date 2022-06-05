@@ -110,9 +110,9 @@ func (c *Celeritas) New(rootPath string) error {
 
 
 	limiterConfig := limiterConfig{
-		enabled: true,
-		rps: 2,
-		burst:4,
+		Enabled: true,
+		Rps: 2,
+		Burst:4,
 	}
 
 	c.AppConfig = AppConfig{
