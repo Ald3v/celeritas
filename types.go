@@ -25,9 +25,9 @@ type databaseConfig struct {
 }
 
 type limiterConfig struct {
-	rps float64
-	burst int
-	enabled bool
+	Rps float64
+	Burst int
+	Enabled bool
 }
 
 type Database struct {
