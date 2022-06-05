@@ -24,6 +24,12 @@ type databaseConfig struct {
 	maxIdleTime string
 }
 
+type limiterConfig struct {
+	rps float64
+	burst int
+	enabled bool
+}
+
 type Database struct {
 	DataType string
 	Pool     *sql.DB

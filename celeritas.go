@@ -35,6 +35,7 @@ type config struct {
 	cookie cookieConfig
 	sessionType string
 	database databaseConfig
+	limiter limiterConfig
 }
 
 func (c *Celeritas) New(rootPath string) error {
