@@ -27,6 +27,7 @@ type Celeritas struct {
 	Session *scs.SessionManager
 	DB Database
 	config config
+	AppConfig AppConfig
 }
 
 type config struct {
@@ -34,7 +35,10 @@ type config struct {
 	renderer string
 	cookie cookieConfig
 	sessionType string
-	database databaseConfig
+	database databaseConfig	
+}
+
+type AppConfig struct {
 	limiter limiterConfig
 }
 
@@ -102,6 +106,17 @@ func (c *Celeritas) New(rootPath string) error {
 		},
 		sessionType: os.Getenv("SESION_TYPE"),
 		database: databaseConfig,
+	}
+
+
+	limiterConfig := limiterConfig{
+		enabled: true,
+		rps: 2,
+		burst:4,
+	}
+
+	c.AppConfig = AppConfig{
+		limiter:limiterConfig,
 	}
 
 	sess := session.Session{
